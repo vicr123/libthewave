@@ -47,6 +47,7 @@ private slots:
     void processEmailString(QString input);
     void processCalculationString(QString input);
     void processReminderString(QString input);
+    void processWhatTimeString(QString input);
 
 signals:
     void outputString(QString output);
