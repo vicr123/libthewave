@@ -1,0 +1,12 @@
+#ifndef LIBTHEWAVE_GLOBAL_H
+#define LIBTHEWAVE_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(LIBTHEWAVE_LIBRARY)
+#  define LIBTHEWAVESHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define LIBTHEWAVESHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // LIBTHEWAVE_GLOBAL_H
