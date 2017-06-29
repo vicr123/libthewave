@@ -1,4 +1,6 @@
 #include "waveengine.h"
+#include <QDateTime>
+#include <QTimeZone>
 
 WaveEngine::WaveEngine(QObject* parent) : QObject(parent)
 {
@@ -30,6 +32,9 @@ void WaveEngine::processString(QString input) {
                 } else if (currentWord == "hello" || currentWord == "hi") {
                     outputString("Hello! For help and tips, just ask \"What can you do?\"");
                     outputSpeech("Hello! For help and tips, just ask What can you do?");
+                    return;
+                } else if (currentWord == "time") {
+                    processWhatTimeString(input);
                     return;
                 } else if (currentWord == "help") {
                     changePane(Help);
@@ -467,5 +472,43 @@ void WaveEngine::processCalculationString(QString input) {
     } else {
         emit outputString("You'll need to install theCalculator to perform calculations using theWave.");
         emit outputSpeech("You'll need to install theCalculator to perform calculations using theWave.");
+    }
+}
+
+void WaveEngine::processWhatTimeString(QString input) {
+    QStringList list = input.split(" ");
+    QString loc = "";
+    QDateTime time;
+
+    if (list.contains("in")) {
+        int indx = list.indexOf(" ");
+        list = list.mid(indx + 1);
+
+        if (list.join(" ").toLower().contains("pago pago") || list.join(" ").toLower().contains("american samoa")) {
+            loc = "Pago Pago, American Samoa";
+            time.setTimeZone(QTimeZone(QString("Pacific/Pago_Pago").toUtf8()));
+        } if (list.join(" ").contains("niue")) {
+            loc = "Niue";
+            time.setTimeZone(QTimeZone(QString("Pacific/Niue").toUtf8()));
+        } else {
+            emit outputString("I'm not sure if you specified a place for me to check the time.");
+            emit outputSpeech("I'm not sure if you specified a place for me to check the time.");
+            return;
+        }
+
+        PaneProperties properties;
+        properties.title = "Time in " + loc;
+        properties.field1 = time.time().toString("h:mm AP");
+
+        QString outputtime = time.time().toString("h:mm AP");
+        outputtime.replace(":00", " o' clock");
+        outputtime.replace(":0", " o ");
+
+        emit outputInlinePane(properties);
+        emit outputString("The time in " + loc + " is " + time.time().toString("h:mm AP") + ".");
+        emit outputSpeech("The time in " + loc + " is " + outputtime);
+    } else {
+        emit outputString("I'm not sure if you specified a place for me to check the time.");
+        emit outputSpeech("I'm not sure if you specified a place for me to check the time.");
     }
 }
