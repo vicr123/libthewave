@@ -478,16 +478,16 @@ void WaveEngine::processCalculationString(QString input) {
 void WaveEngine::processWhatTimeString(QString input) {
     QStringList list = input.split(" ");
     QString loc = "";
-    QDateTime time;
+    QDateTime time = QDateTime::currentDateTime();
 
     if (list.contains("in")) {
-        int indx = list.indexOf(" ");
+        int indx = list.indexOf("in");
         list = list.mid(indx + 1);
 
         if (list.join(" ").toLower().contains("pago pago") || list.join(" ").toLower().contains("american samoa")) {
             loc = "Pago Pago, American Samoa";
             time.setTimeZone(QTimeZone(QString("Pacific/Pago_Pago").toUtf8()));
-        } if (list.join(" ").contains("niue")) {
+        } else if (list.join(" ").contains("niue")) {
             loc = "Niue";
             time.setTimeZone(QTimeZone(QString("Pacific/Niue").toUtf8()));
         } else {
