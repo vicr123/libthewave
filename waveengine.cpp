@@ -484,12 +484,33 @@ void WaveEngine::processWhatTimeString(QString input) {
         int indx = list.indexOf("in");
         list = list.mid(indx + 1);
 
-        if (list.join(" ").toLower().contains("pago pago") || list.join(" ").toLower().contains("american samoa")) {
+        if (list.join(" ").toLower().contains("pago pago")) { // specific cities
             loc = "Pago Pago, American Samoa";
             time.setTimeZone(QTimeZone(QString("Pacific/Pago_Pago").toUtf8()));
         } else if (list.join(" ").contains("niue")) {
             loc = "Niue";
             time.setTimeZone(QTimeZone(QString("Pacific/Niue").toUtf8()));
+        } else if (list.join(" ").contains("louisville")) {
+            loc = "Louisville, Kentucky";
+            time.setTimeZone(QTimeZone(QString("America/Kentucky/Louisville").toUtf8()));
+        } else if (list.join(" ").contains("havana")) {
+            loc = "Havana, Cuba";
+            time.setTimeZone(QTimeZone(QString("America/Havana").toUtf8()));
+        } else if (list.join(" ").contains("london")) {
+            loc = "London, England";
+            time.setTimeZone(QTimeZone(QString("Europe/London").toUtf8()));
+        } else if (list.join(" ").contains("amsterdam")) {
+            loc = "Amsterdam, The Netherlands";
+            time.setTimeZone(QTimeZone(QString("Europe/Amsterdam").toUtf8()));
+        } else if (list.join(" ").contains("singapore")) {
+            loc = "Singapore";
+            time.setTimeZone(QTimeZone(QString("Asia/Singapore").toUtf8()));
+        } else if (list.join(" ").contains("hobart")) {
+            loc = "Hobart, Australia";
+            time.setTimeZone(QTimeZone(QString("Australia/Hobart").toUtf8()));
+        } else if (list.join(" ").contains("sydney")) {
+            loc = "Sydney, Australia";
+            time.setTimeZone(QTimeZone(QString("Australia/Sydney").toUtf8()));
         } else {
             emit outputString("I'm not sure if you specified a place for me to check the time.");
             emit outputSpeech("I'm not sure if you specified a place for me to check the time.");
@@ -497,8 +518,9 @@ void WaveEngine::processWhatTimeString(QString input) {
         }
 
         PaneProperties properties;
-        properties.title = "Time in " + loc;
+        properties.title = "Time";
         properties.field1 = time.time().toString("h:mm AP");
+        properties.field2 = loc;
 
         QString outputtime = time.time().toString("h:mm AP");
         outputtime.replace(":00", " o' clock");
@@ -508,7 +530,15 @@ void WaveEngine::processWhatTimeString(QString input) {
         emit outputString("The time in " + loc + " is " + time.time().toString("h:mm AP") + ".");
         emit outputSpeech("The time in " + loc + " is " + outputtime);
     } else {
-        emit outputString("I'm not sure if you specified a place for me to check the time.");
-        emit outputSpeech("I'm not sure if you specified a place for me to check the time.");
+        PaneProperties properties;
+        properties.title = "Time";
+        properties.field1 = time.time().toString("h:mm AP");
+
+        QString outputtime = time.time().toString("h:mm AP");
+        outputtime.replace(":00", " o' clock");
+        outputtime.replace(":0", " o ");
+
+        emit outputString("It's " + time.time().toString("h:mm AP"));
+        emit outputSpeech("It's " + outputtime);
     }
 }
